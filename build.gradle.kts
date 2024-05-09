@@ -6,31 +6,36 @@ val logback_version: String by project
 plugins {
     kotlin("jvm") version "1.9.23"
     id("io.ktor.plugin") version "2.3.10"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.23"
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
-group = "com.triviagen"
+group = "com.trivigenai"
 version = "0.0.1"
 
 application {
-    mainClass.set("com.triviagen.ApplicationKt")
+    mainClass.set("io.ktor.server.netty.EngineMain")
 
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 
 repositories {
+    google()
     mavenCentral()
 }
 
 dependencies {
-    implementation("io.ktor:ktor-server-content-negotiation-jvm")
     implementation("io.ktor:ktor-server-core-jvm")
-    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
-    implementation("io.ktor:ktor-server-call-logging-jvm")
-    implementation("io.ktor:ktor-server-host-common-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    implementation("io.ktor:ktor-server-call-logging-jvm")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    implementation("com.google.cloud:google-cloud-vertexai:0.4.0")
+    implementation("dev.langchain4j:langchain4j-vertex-ai-gemini:0.29.1")
+    implementation("com.google.cloud:google-cloud-aiplatform:3.41.0")
 }
