@@ -7,20 +7,11 @@ import kotlinx.serialization.json.Json
 
 object GenAI {
 
-    val model: ChatLanguageModel
-
-    init {
-        model = chatLanguageModel()
-    }
-
-    private fun chatLanguageModel(): ChatLanguageModel {
-        val model: ChatLanguageModel = VertexAiGeminiChatModel.builder()
-            .project(System.getenv("PROJECT_ID"))
-            .location(System.getenv("LOCATION"))
-            .modelName("gemini-1.0-pro")
-            .build()
-        return model
-    }
+    val model: VertexAiGeminiChatModel = VertexAiGeminiChatModel.builder()
+        .project(System.getenv("PROJECT_ID"))
+        .location(System.getenv("LOCATION"))
+        .modelName("gemini-1.0-pro")
+        .build()
 
     fun generateTrivia(
         model: ChatLanguageModel,
