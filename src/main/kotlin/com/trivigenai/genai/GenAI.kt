@@ -6,7 +6,14 @@ import dev.langchain4j.model.vertexai.VertexAiGeminiChatModel
 import kotlinx.serialization.json.Json
 
 object GenAI {
-    fun chatLanguageModel(): ChatLanguageModel {
+
+    val model: ChatLanguageModel
+
+    init {
+        model = chatLanguageModel()
+    }
+
+    private fun chatLanguageModel(): ChatLanguageModel {
         val model: ChatLanguageModel = VertexAiGeminiChatModel.builder()
             .project(System.getenv("PROJECT_ID"))
             .location(System.getenv("LOCATION"))
@@ -27,10 +34,7 @@ object GenAI {
         repeat(retries) {
             try {
                 val triviaRound = Json.decodeFromString<Round.TriviaRound>(model.generate(prompt))
-                if (!topicCategories.contains(triviaRound.category)) {
-                    println("Trivia topic not found: retrying...")
-                    throw Exception()
-                }
+                triviaRound.verifyCategory(topicCategories)
                 return triviaRound
             } catch (e: Exception) {
                 lastException = e
@@ -39,6 +43,13 @@ object GenAI {
         }
         println(lastException?.message)
         return Round.Error(message = "Something went wrong..")
+    }
+
+    private fun Round.TriviaRound.verifyCategory(topicCategories: List<String>) {
+        if (!topicCategories.contains(category)) {
+            println("Trivia topic not found: retrying...")
+            throw Exception()
+        }
     }
 
 
@@ -64,6 +75,7 @@ object GenAI {
                 "User defined topic: $topic"
     }
 }
+
 object CategoryHelper {
     val topicCategories = listOf(
         "History",
