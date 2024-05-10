@@ -11,12 +11,11 @@ data class TriviaQuestion(
 
 @Serializable
 sealed class Round {
-    @Serializable
     data class TriviaRound(
         val category: String,
         val questions: List<TriviaQuestion>
     ): Round()
-    @Serializable
+    
     data class Error(
         val message: String
     ): Round()
