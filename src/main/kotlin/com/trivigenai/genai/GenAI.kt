@@ -1,25 +1,38 @@
 package com.trivigenai.genai
 
 import com.trivigenai.models.Round
-import dev.langchain4j.model.chat.ChatLanguageModel
 import dev.langchain4j.model.vertexai.VertexAiGeminiChatModel
 import kotlinx.serialization.json.Json
 
 object GenAI {
 
-    val model: VertexAiGeminiChatModel = VertexAiGeminiChatModel.builder()
+    private val topicCategories = listOf(
+        "History",
+        "Geography",
+        "Science",
+        "Mathematics",
+        "Philosophy",
+        "Art",
+        "Sports",
+        "Literature",
+        "Technology",
+        "Economics",
+        "Politics",
+        "Culture",
+        "Miscellaneous"
+    )
+
+    private val model: VertexAiGeminiChatModel = VertexAiGeminiChatModel.builder()
         .project(System.getenv("PROJECT_ID"))
         .location(System.getenv("LOCATION"))
         .modelName("gemini-1.0-pro")
         .build()
 
     fun generateTrivia(
-        model: ChatLanguageModel,
-        topicCategories: List<String>,
         topic: String?,
         retries: Int = 3
     ): Round {
-        val prompt = buildPrompt(topicCategories, topic)
+        val prompt = buildPrompt(topic)
         var lastException: Exception? = null
 
         repeat(retries) {
@@ -44,7 +57,7 @@ object GenAI {
     }
 
 
-    private fun buildPrompt(topicCategories: List<String>, topic: String?): String {
+    private fun buildPrompt(topic: String?): String {
         return "Given a user provided topic, give 5 trivia questions with 4 options each and answer key " +
                 "for each in strict JSON format with no other text or characters including ``` surrounding " +
                 "it and also classify the topic into one of these categories ${
@@ -65,22 +78,4 @@ object GenAI {
                 "4) The JSON should start with '{' and end with '}' like a normal JSON object.\n" +
                 "User defined topic: $topic"
     }
-}
-
-object CategoryHelper {
-    val topicCategories = listOf(
-        "History",
-        "Geography",
-        "Science",
-        "Mathematics",
-        "Philosophy",
-        "Art",
-        "Sports",
-        "Literature",
-        "Technology",
-        "Economics",
-        "Politics",
-        "Culture",
-        "Miscellaneous"
-    )
 }
