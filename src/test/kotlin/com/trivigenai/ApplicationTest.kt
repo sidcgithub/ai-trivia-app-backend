@@ -1,6 +1,6 @@
-package com.triviagen
+package com.trivigenai
 
-import com.triviagen.plugins.*
+import com.trivigenai.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*

@@ -1,1 +1,1 @@
-rootProject.name = "com.triviagen.triviagen"
+rootProject.name = "com.trivigenai.triviagenbackend"
