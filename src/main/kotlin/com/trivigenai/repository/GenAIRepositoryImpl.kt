@@ -1,10 +1,10 @@
-package com.trivigenai.genai
+package com.trivigenai.repository
 
 import com.trivigenai.models.Round
 import dev.langchain4j.model.vertexai.VertexAiGeminiChatModel
 import kotlinx.serialization.json.Json
 
-object GenAI {
+class GenAIRepositoryImpl : GenAIRepository {
 
     private val topicCategories = listOf(
         "History",
@@ -28,9 +28,9 @@ object GenAI {
         .modelName("gemini-1.0-pro")
         .build()
 
-    fun generateTrivia(
+    override fun generateTrivia(
         topic: String?,
-        retries: Int = 3
+        retries: Int
     ): Round {
         val prompt = buildPrompt(topic)
         var lastException: Exception? = null

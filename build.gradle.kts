@@ -2,11 +2,14 @@
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
+val koin_version: String by project
+val koin_ksp_version: String by project
 
 plugins {
     kotlin("jvm") version "1.9.23"
     id("io.ktor.plugin") version "2.3.10"
     kotlin("plugin.serialization") version "1.9.0"
+    id("com.google.devtools.ksp") version "1.8.20-1.0.11"
 }
 
 group = "com.trivigenai"
@@ -38,4 +41,9 @@ dependencies {
     implementation("com.google.cloud:google-cloud-vertexai:0.4.0")
     implementation("dev.langchain4j:langchain4j-vertex-ai-gemini:0.29.1")
     implementation("com.google.cloud:google-cloud-aiplatform:3.41.0")
+
+    // Koin for Ktor
+    implementation("io.insert-koin:koin-ktor:$koin_version")
+    // SLF4J Logger
+    implementation("io.insert-koin:koin-logger-slf4j:$koin_version")
 }
