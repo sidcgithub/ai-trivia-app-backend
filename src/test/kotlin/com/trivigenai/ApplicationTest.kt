@@ -18,6 +18,10 @@ import kotlin.test.assertEquals
 
 class ApplicationTest : KoinTest {
 
+    val json = Json {
+        ignoreUnknownKeys = true
+    }
+
     @BeforeTest
     fun setup() {
         startKoin {
@@ -28,15 +32,7 @@ class ApplicationTest : KoinTest {
     }
 
     @Test
-    fun testAll() = testApplication {
-        client.get("/trivia/").apply {
-            assertEquals(HttpStatusCode.BadRequest, status)
-            assertEquals(Round.Error(message = "Topic missing..."), Json.decodeFromString<Round.Error>(bodyAsText()))
-        }
-    }
-
-    @Test
-    fun testTriviaNoTopic() = testApplication {
+    fun testRoot() = testApplication {
         client.get("/").apply {
             assertEquals(HttpStatusCode.OK, status)
             assertEquals("Welcome!", bodyAsText())
@@ -44,10 +40,20 @@ class ApplicationTest : KoinTest {
     }
 
     @Test
+    fun testTriviaNoTopic() = testApplication {
+        client.get("/trivia/").apply {
+            assertEquals(HttpStatusCode.BadRequest, status)
+            assertEquals(Round.Error(message = "Topic missing..."), json.decodeFromString<Round.Error>(bodyAsText()))
+        }
+    }
+
+    @Test
     fun testTriviaWithTopic() = testApplication {
         client.get("/trivia/?topic='Fake'").apply {
             assertEquals(HttpStatusCode.OK, status)
-            assert(bodyAsText().contains("Fake"))
+            assertEquals(
+                "Fake", json.decodeFromString<Round.TriviaRound>(bodyAsText()).category
+            )
         }
     }
 
