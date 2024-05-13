@@ -7,7 +7,7 @@ class FakeGenAIRepositoryImpl : GenAIRepository {
     override fun generateTrivia(topic: String?, retries: Int): Round {
         val jsonInput = """
     {
-        "category": "Geography",
+        "category": "Fake",
         "questions": [
             {
                 "question": "Which city is known as the Eternal City?",
