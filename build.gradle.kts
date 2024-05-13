@@ -50,4 +50,5 @@ dependencies {
 
     // Koin for Ktor
     testImplementation("io.insert-koin:koin-test:$koin_version")
+    testImplementation("io.insert-koin:koin-test-junit4:$koin_version")
 }
