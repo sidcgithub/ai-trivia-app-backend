@@ -6,6 +6,12 @@ import kotlinx.serialization.json.Json
 
 class GenAIRepositoryImpl : GenAIRepository {
 
+    companion object {
+        const val PROJECT_ID_LABEL = "PROJECT_ID"
+        const val LOCATION_LABEL = "LOCATION"
+        const val MODEL_VERSION = "gemini-1.0-pro"
+    }
+
     private val topicCategories = listOf(
         "History",
         "Geography",
@@ -23,17 +29,17 @@ class GenAIRepositoryImpl : GenAIRepository {
     )
 
     private val model: VertexAiGeminiChatModel = VertexAiGeminiChatModel.builder()
-        .project(System.getenv("PROJECT_ID"))
-        .location(System.getenv("LOCATION"))
-        .modelName("gemini-1.0-pro")
+        .project(System.getenv(PROJECT_ID_LABEL))
+        .location(System.getenv(LOCATION_LABEL))
+        .modelName(MODEL_VERSION)
         .build()
 
     override fun generateTrivia(
-        topic: String?,
-        retries: Int
+        topic: String?
     ): Round {
         val prompt = buildPrompt(topic)
         var lastException: Exception? = null
+        val retries = 3
 
         repeat(retries) {
             try {

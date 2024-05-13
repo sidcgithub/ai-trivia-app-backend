@@ -4,7 +4,7 @@ import com.trivigenai.models.Round
 import kotlinx.serialization.json.Json
 
 class FakeGenAIRepositoryImpl : GenAIRepository {
-    override fun generateTrivia(topic: String?, retries: Int): Round {
+    override fun generateTrivia(topic: String?): Round {
         val jsonInput = """
     {
         "category": "Fake",

@@ -1,5 +1,6 @@
 package com.trivigenai.plugins
 
+import com.trivigenai.models.Round
 import com.trivigenai.service.GenAIService
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -10,7 +11,7 @@ import org.koin.ktor.ext.inject
 fun Application.configureRouting() {
     routing {
         get("/") {
-            call.respondText { "Hello World!" }
+            call.respondText { "Welcome!" }
         }
         getTriviaRound()
     }
@@ -21,7 +22,7 @@ private fun Routing.getTriviaRound() {
     get("/trivia/") {
         call.request.queryParameters["topic"]?.let {
             call.respond(HttpStatusCode.OK, service.getTrivia(it))
-        } ?: call.respondText { "No topic chosen!" }
+        } ?: call.respond(HttpStatusCode.BadRequest, Round.Error(message = "Topic missing..."))
 
     }
 }
