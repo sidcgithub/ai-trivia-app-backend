@@ -1,21 +1,64 @@
 package com.trivigenai
 
-import com.trivigenai.plugins.*
+import com.trivigenai.di.testModule
+import com.trivigenai.models.Round
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
-import kotlin.test.*
+import kotlinx.serialization.json.Json
+import org.junit.After
+import org.koin.core.context.GlobalContext.stopKoin
+import org.koin.core.context.loadKoinModules
+import org.koin.core.context.startKoin
+import org.koin.test.KoinTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-class ApplicationTest {
+class ApplicationTest : KoinTest {
+
+    val json = Json {
+        ignoreUnknownKeys = true
+    }
+
+    @BeforeTest
+    fun setup() {
+        startKoin {
+            loadKoinModules(
+                testModule
+            )
+        }
+    }
+
     @Test
     fun testRoot() = testApplication {
-        application {
-            configureRouting()
-        }
         client.get("/").apply {
             assertEquals(HttpStatusCode.OK, status)
-            assertEquals("Hello World!", bodyAsText())
+            assertEquals("Welcome!", bodyAsText())
         }
+    }
+
+    @Test
+    fun testTriviaNoTopic() = testApplication {
+        client.get("/trivia/").apply {
+            assertEquals(HttpStatusCode.BadRequest, status)
+            assertEquals(Round.Error(message = "Topic missing..."), json.decodeFromString<Round.Error>(bodyAsText()))
+        }
+    }
+
+    @Test
+    fun testTriviaWithTopic() = testApplication {
+        client.get("/trivia/?topic='Fake'").apply {
+            assertEquals(HttpStatusCode.OK, status)
+            assertEquals(
+                "Fake", json.decodeFromString<Round.TriviaRound>(bodyAsText()).category
+            )
+        }
+    }
+
+    @After
+    fun tearDown() {
+        stopKoin()
     }
 }

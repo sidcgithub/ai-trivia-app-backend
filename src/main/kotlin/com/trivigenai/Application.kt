@@ -1,10 +1,9 @@
 package com.trivigenai
 
-import com.trivigenai.plugins.*
-import io.ktor.serialization.kotlinx.json.*
+import com.trivigenai.plugins.configureDI
+import com.trivigenai.plugins.configureRouting
+import com.trivigenai.plugins.configureSerialization
 import io.ktor.server.application.*
-import io.ktor.server.plugins.contentnegotiation.*
-import kotlinx.serialization.json.Json
 
 fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)
@@ -12,13 +11,8 @@ fun main(args: Array<String>) {
 
 @Suppress("Unused")
 fun Application.module() {
+    configureDI()
     configureRouting()
-    install(ContentNegotiation) {
-        json(Json {
-            prettyPrint = true
-            isLenient = true
-            ignoreUnknownKeys = true
-        })
-    }
+    configureSerialization()
 }
 

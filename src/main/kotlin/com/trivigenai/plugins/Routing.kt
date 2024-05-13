@@ -1,24 +1,29 @@
 package com.trivigenai.plugins
 
-import com.trivigenai.genai.GenAI.generateTrivia
+import com.trivigenai.models.Round
+import com.trivigenai.service.GenAIService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.koin.ktor.ext.inject
 
 fun Application.configureRouting() {
     routing {
         get("/") {
-            call.respondText { "Hello World!" }
+            call.respondText { "Welcome!" }
         }
         getTriviaRound()
     }
 }
 
 private fun Routing.getTriviaRound() {
+    val service by inject<GenAIService>()
     get("/trivia/") {
-        val topic = call.request.queryParameters["topic"]
-        call.respond(HttpStatusCode.OK, generateTrivia(topic))
+        call.request.queryParameters["topic"]?.let {
+            call.respond(HttpStatusCode.OK, service.getTrivia(it))
+        } ?: call.respond(HttpStatusCode.BadRequest, Round.Error(message = "Topic missing..."))
+
     }
 }
 
