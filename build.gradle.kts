@@ -8,7 +8,6 @@ plugins {
     kotlin("jvm") version "1.9.23"
     id("io.ktor.plugin") version "2.3.10"
     kotlin("plugin.serialization") version "1.9.0"
-    id("com.google.devtools.ksp") version "1.8.20-1.0.11"
 }
 
 group = "com.trivigenai"
