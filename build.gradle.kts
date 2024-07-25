@@ -29,6 +29,7 @@ dependencies {
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
     implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("io.ktor:ktor-server-call-logging-jvm")
@@ -51,4 +52,9 @@ dependencies {
     // Koin for Ktor
     testImplementation("io.insert-koin:koin-test:$koin_version")
     testImplementation("io.insert-koin:koin-test-junit4:$koin_version")
+
+    //Supabase
+    implementation(platform("io.github.jan-tennert.supabase:bom:2.5.2"))
+    implementation("io.ktor:ktor-client-cio:$ktor_version")
+    implementation("io.github.jan-tennert.supabase:gotrue-kt")
 }
